@@ -11,6 +11,7 @@ import * as prng from 'lib0/prng'
 import * as delta from 'lib0/delta'
 import * as s from 'lib0/schema'
 import * as object from 'lib0/object'
+import { debug } from './debug.js'
 
 /**
  * @param {t.TestCase} _tc
@@ -34,7 +35,7 @@ export const testIterators = _tc => {
    * @type {Array<string>}
    */
   const keys = Array.from(ymap.keys())
-  console.log(vals, entries, keys)
+  debug(vals, entries, keys)
 }
 
 /**
@@ -53,10 +54,10 @@ export const testMapEventError = _tc => {
     event = e
   })
   t.fails(() => {
-    t.info(event.keys)
+    debug(event.keys)
   })
   t.fails(() => {
-    t.info(event.keys)
+    debug(event.keys)
   })
 }
 
@@ -631,21 +632,21 @@ export const testAttributedContent = _tc => {
     ymap.set('test', 42)
     const expectedContent = { test: delta.$deltaMapChangeJson.expect({ type: 'insert', value: 42, attribution: { insert: [] } }) }
     const attributedContent = ymap.getContent(attributionManager)
-    console.log(attributedContent.toJSON())
+    debug(attributedContent.toJSON())
     t.compare(expectedContent, attributedContent.toJSON().attrs)
   })
   t.group('overwrite value', () => {
     ymap.set('test', 'fourtytwo')
     const expectedContent = { test: delta.$deltaMapChangeJson.expect({ type: 'insert', value: 'fourtytwo', attribution: { insert: [] } }) }
     const attributedContent = ymap.getContent(attributionManager)
-    console.log(attributedContent)
+    debug(attributedContent)
     t.compare(expectedContent, attributedContent.toJSON().attrs)
   })
   t.group('delete value', () => {
     ymap.delete('test')
     const expectedContent = { test: delta.$deltaMapChangeJson.expect({ type: 'delete', prevValue: 'fourtytwo', attribution: { delete: [] } }) }
     const attributedContent = ymap.getContent(attributionManager)
-    console.log(attributedContent.toJSON())
+    debug(attributedContent.toJSON())
     t.compare(expectedContent, attributedContent.toJSON().attrs)
   })
 }

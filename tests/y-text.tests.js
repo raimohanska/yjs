@@ -5,6 +5,7 @@ import * as math from 'lib0/math'
 import * as delta from 'lib0/delta'
 import * as list from 'lib0/list'
 import { createIdMapFromIdSet, noAttributionsManager, TwosetAttributionManager, createAttributionManagerFromSnapshots } from 'yjs/internals'
+import { debug } from './debug.js'
 
 const { init, compare } = Y
 
@@ -1860,7 +1861,7 @@ export const testFormattingBug = async _tc => {
     .done()
   t.compare(text1.getContent(), expectedResult)
   t.compare(text1.getContent().toJSON(), text2.getContent().toJSON())
-  console.log(text1.getContent().toJSON())
+  debug(text1.getContent().toJSON())
 }
 
 /**
@@ -1909,14 +1910,14 @@ export const testAttributedContent = _tc => {
     ytext.applyDelta(delta.create().retain(4, { italic: true }).retain(2).delete(5).insert('attributions'))
     const expectedContent = delta.create().insert('Hell', { italic: true }, { format: { italic: [] } }).insert('o ').insert('World', {}, { delete: [] }).insert('attributions', {}, { insert: [] }).insert('!')
     const attributedContent = ytext.getContent(attributionManager)
-    console.log(attributedContent.toJSON())
+    debug(attributedContent.toJSON())
     t.assert(attributedContent.equals(expectedContent))
   })
   t.group('unformat', () => {
     ytext.applyDelta(delta.create().retain(5, { italic: null }))
     const expectedContent = delta.create().insert('Hell', null, { format: { italic: [] } }).insert('o attributions!')
     const attributedContent = ytext.getContent(attributionManager)
-    console.log(attributedContent.toJSON())
+    debug(attributedContent.toJSON())
     t.assert(attributedContent.equals(expectedContent))
   })
 }
@@ -1947,10 +1948,10 @@ export const testAttributedDiffing = _tc => {
   const attributionManager = new TwosetAttributionManager(attributedInsertions, attributedDeletions)
   // we render the attributed content with the attributionManager
   const attributedContent = ytext.getContent(attributionManager)
-  console.log(JSON.stringify(attributedContent.toJSON(), null, 2))
+  debug(JSON.stringify(attributedContent.toJSON(), null, 2))
   const expectedContent = delta.create().insert('Hell', { italic: true }, { format: { italic: ['Bob'] } }).insert('o ').insert('World', {}, { delete: ['Bob'] }).insert('attributions', {}, { insert: ['Bob'] }).insert('!')
   t.assert(attributedContent.equals(expectedContent))
-  console.log(Y.encodeIdMap(attributedInsertions).length)
+  debug(Y.encodeIdMap(attributedInsertions).length)
 }
 
 // RANDOM TESTS
@@ -2168,7 +2169,7 @@ const qChanges = [
  */
 const checkResult = result => {
   for (let i = 1; i < result.testObjects.length; i++) {
-    t.info('length of text = ' + result.users[i - 1].getText('text').length)
+    debug('length of text = ' + result.users[i - 1].getText('text').length)
     const p1 = result.users[i - 1].getText('text').getContentDeep().children
     const p2 = result.users[i].getText('text').getContentDeep().children
     t.compare(p1, p2)
@@ -2203,8 +2204,8 @@ export const testAttributionManagerDefaultPerformance = tc => {
       ytext.insert(index, content)
     }
   }
-  t.info(`number of changes: ${N / 1000}k`)
-  t.info(`length of text: ${ytext.length}`)
+  debug(`number of changes: ${N / 1000}k`)
+  debug(`length of text: ${ytext.length}`)
   const M = 100
   t.measureTime(`original toString perf <executed ${M} times>`, () => {
     for (let i = 0; i < M; i++) {

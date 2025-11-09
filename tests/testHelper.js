@@ -12,6 +12,7 @@ import * as delta from 'lib0/delta'
 import {
   createIdSet, createIdMap, addToIdSet, encodeIdMap
 } from '../src/internals.js'
+import { debug } from './debug.js'
 
 export * from '../src/index.js'
 
@@ -62,7 +63,7 @@ const useV1Encoding = () => {
 }
 
 const useV2Encoding = () => {
-  console.error('sync protocol doesnt support v2 protocol yet, fallback to v1 encoding') // @Todo
+  debug('sync protocol doesnt support v2 protocol yet, fallback to v1 encoding') // @Todo
   useV2 = false
   enc = encV1
 }
@@ -434,7 +435,7 @@ export const createRandomIdMap = (gen, clients, clockRange, attrChoices) => {
     }
     idMap.add(client, clockStart, len, attrs.map(v => Y.createAttributionItem('', v)))
   }
-  t.info(`Created IdMap with ${numOfOps} ranges and ${attrChoices.length} different attributes. Encoded size: ${encodeIdMap(idMap).byteLength}`)
+  debug(`Created IdMap with ${numOfOps} ranges and ${attrChoices.length} different attributes. Encoded size: ${encodeIdMap(idMap).byteLength}`)
   return idMap
 }
 
