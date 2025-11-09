@@ -5,6 +5,7 @@ import * as prng from 'lib0/prng'
 import * as math from 'lib0/math'
 import * as env from 'lib0/environment'
 import * as delta from 'lib0/delta'
+import { debug } from './debug.js'
 
 const isDevMode = env.getVariable('node_env') === 'development'
 
@@ -25,7 +26,7 @@ export const testBasicUpdate = _tc => {
  */
 export const testFailsObjectManipulationInDevMode = _tc => {
   if (isDevMode) {
-    t.info('running in dev mode')
+    debug('running in dev mode')
     const doc = new Y.Doc()
     const a = [1, 2, 3]
     const b = { o: 1 }
@@ -38,7 +39,7 @@ export const testFailsObjectManipulationInDevMode = _tc => {
       b.o = 42
     })
   } else {
-    t.info('not in dev mode')
+    debug('not in dev mode')
   }
 }
 
@@ -137,7 +138,7 @@ export const testLengthIssue2 = _tc => {
       next.delete(4)
     })
   })
-  console.log(next.toArray())
+  debug(next.toArray())
 }
 
 /**
@@ -374,7 +375,7 @@ export const testObservedeepIndexes = _tc => {
   map.observeDeep((events) => { eventPath = events[0].path })
   // set a value on the map inside of our array
   map.get('my-array').get(3).set('hello', 'world')
-  console.log(eventPath)
+  debug(eventPath)
   t.compare(eventPath, ['my-array', 3])
 }
 
@@ -531,7 +532,7 @@ export const testAttributedContent = _tc => {
     })
     const expectedContent = delta.create().insert([1], null, { delete: [] }).insert([2]).insert([42], null, { insert: [] })
     const attributedContent = yarray.getContent(attributionManager)
-    console.log(attributedContent.toJSON())
+    debug(attributedContent.toJSON())
     t.assert(attributedContent.equals(expectedContent))
   })
 }

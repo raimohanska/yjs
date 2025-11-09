@@ -6,6 +6,7 @@ import * as encoding from 'lib0/encoding'
 import * as decoding from 'lib0/decoding'
 import * as object from 'lib0/object'
 import * as delta from 'lib0/delta'
+import { debug } from './debug.js'
 
 /**
  * @typedef {Object} Enc
@@ -179,7 +180,7 @@ const checkUpdateCases = (ydoc, updates, enc, hasDeletes) => {
   // enc.logUpdate(targetState)
 
   cases.forEach((mergedUpdates, i) => {
-    t.info(`State Case $${i} (${enc.description}):`)
+    debug(`State Case $${i} (${enc.description}):`)
     // enc.logUpdate(updates)
     const merged = new Y.Doc({ gc: false })
     enc.applyUpdate(merged, mergedUpdates)
@@ -230,7 +231,7 @@ const checkUpdateCases = (ydoc, updates, enc, hasDeletes) => {
  */
 export const testMergeUpdates1 = _tc => {
   encoders.forEach((enc) => {
-    t.info(`Using encoder: ${enc.description}`)
+    debug(`Using encoder: ${enc.description}`)
     const ydoc = new Y.Doc({ gc: false })
     const updates = /** @type {Array<Uint8Array>} */ ([])
     ydoc.on(enc.updateEventName, update => { updates.push(update) })
@@ -250,7 +251,7 @@ export const testMergeUpdates1 = _tc => {
  */
 export const testMergeUpdates2 = _tc => {
   encoders.forEach((enc, _i) => {
-    t.info(`Using encoder: ${enc.description}`)
+    debug(`Using encoder: ${enc.description}`)
     const ydoc = new Y.Doc({ gc: false })
     const updates = /** @type {Array<Uint8Array>} */ ([])
     ydoc.on(enc.updateEventName, update => { updates.push(update) })
